@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, 
+      initial-scale=1.0">
+    <title>Career Dendrogram </title>
+    <link rel="stylesheet" href="style/style.css">
+    <link rel="shortcut icon" href="favicon5.ico" type="image/x-icon">
+    <!-- <bootsrap-4></bootsrap-4> -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
+      integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"></script>
+
+</head>
+<style>
+    /*----------------genealogy-scroll----------*/
+    .h3, h3 {
+    font-size: .9rem;
+}
+    .genealogy-scroll::-webkit-scrollbar {
+        width: 5px;
+        height: 8px;
+    }
+
+    .genealogy-scroll::-webkit-scrollbar-track {
+        border-radius: 10px;
+        background-color: #e4e4e4;
+    }
+
+    .genealogy-scroll::-webkit-scrollbar-thumb {
+        background: #212121;
+        border-radius: 10px;
+        transition: 0.5s;
+    }
+
+    .genealogy-scroll::-webkit-scrollbar-thumb:hover {
+        background: #d5b14c;
+        transition: 0.5s;
+    }
+
+
+    /*----------------genealogy-tree----------*/
+    .genealogy-body {
+        white-space: nowrap;
+        overflow-y: hidden;
+        padding: 50px;
+        min-height: 90vh;
+        padding-top: 10px;
+        text-align: center;
+    }
+
+    .genealogy-tree {
+        display: inline-block;
+    }
+
+    .genealogy-tree ul {
+        padding-top: 20px;
+        position: relative;
+        padding-left: 0px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .genealogy-tree li {
+        float: left;
+        text-align: center;
+        list-style-type: none;
+        position: relative;
+        padding: 20px 5px 0 5px;
+    }
+
+    .genealogy-tree li::before,
+    .genealogy-tree li::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 50%;
+        border-top: 2px solid #ccc;
+        width: 50%;
+        height: 18px;
+    }
+    .genealogy-tree li::before,
+    .genealogy-tree li::after {
+        font-size: 0rem;
+    font-weight: 400;
+    line-height: 0.5;
+    }
+    .genealogy-tree li::after {
+        right: auto;
+        left: 50%;
+        border-left: 2px solid #ccc;
+    }
+
+    .genealogy-tree li:only-child::after,
+    .genealogy-tree li:only-child::before {
+        display: none;
+    }
+
+    .genealogy-tree li:only-child {
+        padding-top: 0;
+    }
+
+    .genealogy-tree li:first-child::before,
+    .genealogy-tree li:last-child::after {
+        border: 0 none;
+    }
+
+    .genealogy-tree li:last-child::before {
+        border-right: 2px solid #ccc;
+        border-radius: 0 5px 0 0;
+        -webkit-border-radius: 0 5px 0 0;
+        -moz-border-radius: 0 5px 0 0;
+    }
+
+    .genealogy-tree li:first-child::after {
+        border-radius: 5px 0 0 0;
+        -webkit-border-radius: 5px 0 0 0;
+        -moz-border-radius: 5px 0 0 0;
+    }
+
+    .genealogy-tree ul ul::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 50%;
+        border-left: 2px solid #ccc;
+        width: 0;
+        height: 20px;
+    }
+
+    .genealogy-tree li a {
+        text-decoration: none;
+        color: #666;
+        font-family: arial, verdana, tahoma;
+        font-size: 11px;
+        display: inline-block;
+        border-radius: 5px;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+    }
+
+    .genealogy-tree li a:hover+ul li::after,
+    .genealogy-tree li a:hover+ul li::before,
+    .genealogy-tree li a:hover+ul::before,
+    .genealogy-tree li a:hover+ul ul::before {
+        border-color: #fbba00;
+    }
+
+    /*--------------memeber-card-design----------*/
+    .member-view-box {
+        padding: 0px 20px;
+        text-align: center;
+        border-radius: 4px;
+        position: relative;
+    }
+
+    .member-image {
+        width: 60px;
+        position: relative;
+    }
+
+    .member-image img {
+        width: 60px;
+        height: 60px;
+        border-radius: 6px;
+        background-color: #000;
+        z-index: 1;
+    }
+    .ds{
+        font-size: 0rem;
+    font-weight: 400;
+    line-height: 0.1;
+    }
+    
+/* element.style {
+} */
+.genealogy-tree li {
+    float: left;
+    text-align: center;
+    list-style-type: none;
+    position: relative;
+    padding: 23px 5px 0 5px;
+}
+*, ::after, ::before {
+    box-sizing: border-box;
+}
+*, ::after, ::before {
+    box-sizing: border-box;
+}
+user agent stylesheet
+li {
+    display: list-item;
+    text-align: -webkit-match-parent;
+}
+user agent stylesheet
+ul ul ul {
+    list-style-type: square;
+}
+user agent stylesheet
+ul ul {
+    list-style-type: circle;
+}
+user agent stylesheet
+ul {
+    list-style-type: disc;
+}
+user agent stylesheet
+li {
+    text-align: -webkit-match-parent;
+}
+user agent stylesheet
+ul ul ul {
+    list-style-type: square;
+}
+user agent stylesheet
+ul ul {
+    list-style-type: circle;
+}
+user agent stylesheet
+ul {
+    list-style-type: disc;
+}
+user agent stylesheet
+li {
+    text-align: -webkit-match-parent;
+}
+user agent stylesheet
+ul ul {
+    list-style-type: circle;
+}
+user agent stylesheet
+ul {
+    list-style-type: disc;
+}
+user agent stylesheet
+li {
+    text-align: -webkit-match-parent;
+}
+user agent stylesheet
+ul {
+    list-style-type: disc;
+}
+.genealogy-body {
+    white-space: nowrap;
+    overflow-y: hidden;
+    padding: 50px;
+    min-height: 90vh;
+    padding-top: 10px;
+    text-align: center;
+}
+body {
+    margin: 0;
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+    /* font-size: 1rem; */
+    font-weight: 400;
+    line-height: 0.2;
+    color: #212529;
+    text-align: left;
+    background-color: #fff;
+}
+
+</style>
+
+<body>
+    <!-- Demo navbar -->
+    <nav class="navbar navbar-expand-lg sticky-top navbar-light bg-white py-3 shadow-sm">
+        <div class="container"><a href="#" class="navbar-brand">
+                <div class="box">
+                    <div class="text animated bounce">Dendrogram</div>
+                </div>
+            </a>
+            <button type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
+                class="navbar-toggler"><span class="navbar-toggler-icon"></span></button>
+            <div id="navbarSupportedContent" class="collapse navbar-collapse">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item"><a href="index.html" class="nav-link">Home <span
+                                class="sr-only">(current)</span></a></li>
+                    <li class="nav-item"><a href="about.html" class="nav-link">About Us</a></li>
+                    <li class="nav-item"><a href="contact.html" class="nav-link">Contact Us</a></li>
+                    
+
+                    <!-- Button trigger modal -->
+
+                    <button type="button" class="btn btn-outline-info" style="margin: 0 6px;" data-toggle="modal"
+                        data-target="#searchModalCenter">Search</button>
+                    <br>
+                    <button type="button" class="btn btn-primary" style="margin: 0 6px;" data-toggle="modal"
+                        data-target="#loginModalCenter">
+                        Login
+                    </button><br>
+                    <button style="margin: 0 2px;" type="button" class="btn btn-success" data-toggle="modal"
+                        data-target="#signupModalCenter">
+                        Register
+                    </button>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Modal Search-->
+
+    <div class="modal fade" id="searchModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="searchModalLongTitle">
+                        Please Enter The Following Details.</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="row">
+                            <div class="col-md-6 mb-2">
+                                <label for="Occupation">Occupation</label>
+                                <select class="custom-select d-block w-100" id="country" required="">
+                                    <option value="">Choose...</option>
+                                    <option>#</option>
+                                    <option>#</option>
+                                    <option>#</option>
+                                    <option>#</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label for="other"> <br> </label>
+                                <input type="text" class="form-control" placeholder="Other" aria-label="Other">
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label for="Occupation">Interest</label>
+                                <select class="custom-select d-block w-100" id="country" required="">
+                                    <option value="">Choose...</option>
+                                    <option>#</option>
+                                    <option>#</option>
+                                    <option>#</option>
+                                    <option>#</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label for="other"> <br> </label>
+                                <input type="text" class="form-control" placeholder="Other" aria-label="Other">
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label for="Occupation">Hobbies</label>
+                                <select class="custom-select d-block w-100" id="country" required="">
+                                    <option value="">Choose...</option>
+                                    <option>#</option>
+                                    <option>#</option>
+                                    <option>#</option>
+                                    <option>#</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label for="other"> <br> </label>
+                                <input type="text" class="form-control" placeholder="Other" aria-label="Other">
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label for="Occupation">Skills</label>
+                                <select class="custom-select d-block w-100" id="country" required="">
+                                    <option value="">Choose...</option>
+                                    <option>#</option>
+                                    <option>#</option>
+                                    <option>#</option>
+                                    <option>#</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label for="other"> <br> </label>
+                                <input type="text" class="form-control" placeholder="Other" aria-label="Other">
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <a href="profile.html" class="btn btn-primary" role="button">Register</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal login-->
+
+    <div class="modal fade" id="loginModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLongTitle">Login</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+
+                        <div class="mb-3">
+
+                            <!-- <input type="text" class="form-control" placeholder="First name" aria-label="First name"> -->
+                            <label for="exampleInputEmail1" class="form-label">User ID</label>
+
+                            <input type="email" class="form-control" id="exampleInputEmail1"
+                                placeholder="Enter Your User ID" aria-describedby="emailHelp">
+                            <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputPassword1" class="form-label">Password</label>
+                            <input type="password" class="form-control" placeholder="Enter Your Password"
+                                id="exampleInputPassword1">
+                        </div>
+                        <!-- <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" id="exampleCheck1">
+              <label class="form-check-label" for="exampleCheck1">Check me out</label>
+            </div> -->
+
+                        <div class="row align-items-center mt-4 mb-5">
+                            <div class="col text-left">
+                                <div class="custom-control custom-checkbox"><input id="my-input"
+                                        class="custom-control-input" type="checkbox" name="" value="true"><label
+                                        for="my-input" class="custom-control-label"><span>Remember me</span></label>
+                                </div>
+                            </div>
+                            <div class="col-auto text-right"> <span class="pass"><u><a href="">Forgot
+                                            password</a></u></span></div>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <a href="profile.html" class="btn btn-primary" role="button">Login</a>
+                    <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+                    <!-- <button type="button" class="btn btn-primary">Login</button> -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal signup-->
+
+    <div class="modal fade" id="signupModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="signupModalLongTitle">Register</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+
+                    <div class="row g-3">
+                        <div class="col">
+                            <input type="text" class="form-control" placeholder="Name" aria-label="Name">
+                        </div>
+                    </div>
+                    <br><br>
+                    <div class="row g-3">
+                        <div class="col">
+                            <input class="form-control" placeholder="Age" aria-label="Age" type="number"
+                                id="quantity" name="quantity" min="12" max="100">
+                        </div>
+                    </div>
+                    <br>
+                    <br>
+                    <br>
+                    <label for="gender">Gender:- </label>
+                    <input type="radio" id="Male" name="gender">
+                    <label for="Male">Male</label>
+                    <input type="radio" id="female" name="gender">
+                    <label for="female">Female</label>
+                    <input type="radio" id="other" name="gender">
+                    <label for="other">Other</label>
+                    <br><br>
+                    <div class="row">
+
+                        <!-- <div class="col-md-6 mb-2">
+                            <label for="Occupation">Occupation</label>
+                            <select class="custom-select d-block w-100" id="country" required="">
+                                <option value="">Choose...</option>
+                                <option>#</option>
+                                <option>#</option>
+                                <option>#</option>
+                                <option>#</option>
+                            </select>
+                        </div> -->
+                        <div class="col-md-6 mb-2">
+                            <label for="other"> <br> </label>
+                            <input type="text" class="form-control" placeholder="Occupation" aria-label="Other">
+                            </select>
+                        </div>
+                        <!-- <div class="col-md-6 mb-2">
+                            <label for="Occupation">Interest</label>
+                            <select class="custom-select d-block w-100" id="country" required="">
+                                <option value="">Choose...</option>
+                                <option>#</option>
+                                <option>#</option>
+                                <option>#</option>
+                                <option>#</option>
+                            </select>
+                        </div> -->
+                        <div class="col-md-6 mb-2">
+                            <label for="other"> <br> </label>
+                            <input type="text" class="form-control" placeholder="Interest" aria-label="Other">
+                            </select>
+                        </div>
+                        <!-- <div class="col-md-6 mb-2">
+                            <label for="Occupation">Hobbies</label>
+                            <select class="custom-select d-block w-100" id="country" required="">
+                                <option value="">Choose...</option>
+                                <option>#</option>
+                                <option>#</option>
+                                <option>#</option>
+                                <option>#</option>
+                            </select>
+                        </div> -->
+                        <div class="col-md-6 mb-2">
+                            <label for="other"> <br> </label>
+                            <input type="text" class="form-control" placeholder="Hobbies" aria-label="Other">
+                            </select>
+                        </div>
+                        <!-- <div class="col-md-6 mb-2">
+                            <label for="Occupation">Skills</label>
+                            <select class="custom-select d-block w-100" id="country" required="">
+                                <option value="">Choose...</option>
+                                <option>#</option>
+                                <option>#</option>
+                                <option>#</option>
+                                <option>#</option>
+                            </select>
+                        </div> -->
+                        <div class="col-md-6 mb-2">
+                            <label for="other"> <br> </label>
+                            <input type="text" class="form-control" placeholder="Skills" aria-label="Other">
+                            </select>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="mb-3">
+                        <label for="exampleInputEmail1" class="form-label">Email ID</label>
+                        <input type="email" class="form-control" id="exampleInputEmail1"
+                            aria-describedby="emailHelp">
+                        
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleInputEmail1" class="form-label">Mobile No</label>
+                        <input type="email" class="form-control" id="exampleInputEmail1"
+                            aria-describedby="emailHelp">
+                        <div id="emailHelp" class="form-text"></div>
+                    </div>
+                    <label for="inputPassword5" class="form-label">Password</label>
+                    <input type="password" id="inputPassword5" class="form-control"
+                        aria-describedby="passwordHelpBlock">
+                    
+                    <br>
+                    <br>
+                    <div class="mb-3">
+                        <label for="exampleInputPassword1" class="form-label">Confirm Password</label>
+                        <input type="password" class="form-control" id="exampleInputPassword1">
+                    </div>
+
+                    <div class="form-check d-flex mb-5">
+                        <input class="form-check-input me-2" type="checkbox" value="" id="form2Example3cg" />
+                        <label class="form-check-label" for="form2Example3g">
+                            I agree all statements in <a href="#!" class="text-body"><u>Terms of service</u></a>
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <a href="profile.html" class="btn btn-primary" role="button">Register</a>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- tree -->
+    <div class="body genealogy-body genealogy-scroll">
+        <div class="genealogy-tree">
+            <ul>
+                <li>
+                    <a href="javascript:void(0);">
+                        <div class="member-view-box">
+                            <div class="member-image">
+                                <img src="photo/prof.png" alt="Member">
+                                <div class="member-details">
+                                    <h3>Dendrogram
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    <ul class="active">
+                        <li>
+                            <a href="javascript:void(0);">
+                                <div class="member-view-box">
+                                    <div class="member-image">
+                                        <!-- <img src="3.jpg" alt="Member"> -->
+                                        <div class="member-details">
+                                            <h3>Skills</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                            <ul>
+                                <li>
+                                    <a href="javascript:void(0);">
+                                        <div class="member-view-box">
+                                            <div class="member-image">
+                                                <!-- <img src="https://image.flaticon.com/icons/svg/145/145867.svg"
+                                                    alt="Member"> -->
+                                                <div class="member-details">
+                                                    
+                                                    <h3>Programming
+                                                        </h3>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <ul>
+                                        <li>
+                                            <a href="javascript:void(0);">
+                                                <div class="member-view-box">
+                                                    <div class="member-image">
+                                                        <!-- <img src="https://image.flaticon.com/icons/svg/145/145867.svg"
+                                                            alt="Member"> -->
+                                                        <div class="member-details">
+                                                            <a class="ds" href="contant/Programming.html" target="_blank"><h3>Software <br>
+                                                                 Engineering</h3></a>
+                                                            
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);">
+                                                <div class="member-view-box">
+                                                    <div class="member-image">
+                                                        <!-- <img src="https://image.flaticon.com/icons/svg/145/145867.svg"
+                                                            alt="Member"> -->
+                                                        <div class="member-details">
+                                                            <a class="ds" href="contant/Programming1.html" target="_blank"><h3>Blogging</h3></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);">
+                                                <div class="member-view-box">
+                                                    <div class="member-image">
+                                                        <!-- <img src="https://image.flaticon.com/icons/svg/145/145867.svg"
+                                                            alt="Member"> -->
+                                                        <div class="member-details">
+                                                            <a href="contant/Programming2.html" target="_blank"><h3>Freelance <br> Programming</h3></a>
+                                                            <!-- <h3>Freelance <br> Programming</h3> -->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0);">
+                                        <div class="member-view-box">
+                                            <div class="member-image">
+                                                <!-- <img src="https://image.flaticon.com/icons/svg/145/145867.svg"
+                                                    alt="Member"> -->
+                                                <div class="member-details">
+                                                    
+                                                    <h3>Public <br> Speaking</h3>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <ul>
+                                        <li>
+                                            <a href="javascript:void(0);">
+                                                <div class="member-view-box">
+                                                    <div class="member-image">
+                                                        <!-- <img src="https://image.flaticon.com/icons/svg/145/145867.svg"
+                                                            alt="Member"> -->
+                                                        <div class="member-details">
+                                                            <a class="ds" href="contant/public.html" target="_blank"><h3>Corporate <br>
+                                                                Trainer</h3></a>
+                                                            
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);">
+                                                <div class="member-view-box">
+                                                    <div class="member-image">
+                                                        <!-- <img src="https://image.flaticon.com/icons/svg/145/145867.svg"
+                                                            alt="Member"> -->
+                                                        <div class="member-details">
+                                                            <a class="ds" href="contant/public1.html" target="_blank"><h3>Purchasing <br> Manager</h3></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+
+                                        </li>
+                                        
+                                    </ul>
+                                </li>
+                               
+
+                                <li>
+                                    <a href="javascript:void(0);">
+                                        <div class="member-view-box">
+                                            <div class="member-image">
+                                                <!-- <img src="https://image.flaticon.com/icons/svg/145/145867.svg"
+                                                    alt="Member"> -->
+                                                <div class="member-details">
+                                                
+                                                    <h3>Maths</h3>
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <ul>
+                                        <li>
+                                            <a href="javascript:void(0);">
+                                                <div class="member-view-box">
+                                                    <div class="member-image">
+                                                        <!-- <img src="https://image.flaticon.com/icons/svg/145/145867.svg"
+                                                            alt="Member"> -->
+                                                        <div class="member-details">
+                                                            <a href="contant/math.html"  target="_blank"><h3>Budget <br>Analyst</h3></a>
+                                                            
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        
+                                        <li>
+                                            <a href="javascript:void(0);">
+                                                <div class="member-view-box">
+                                                    <div class="member-image">
+                                                        <!-- <img src="https://image.flaticon.com/icons/svg/145/145867.svg"
+                                                            alt="Member"> -->
+                                                        <div class="member-details">
+                                                            <a href="contant/math1.html"  target="_blank"><h3>Astronomer</h3></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);">
+                                <div class="member-view-box">
+                                    <div class="member-image">
+                                        <!-- <img src="3.jpg" alt="Member"> -->
+                                        <div class="member-details">
+                                            <h3>Hobbies</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                            <ul>
+                                <li>
+                                    <a href="javascript:void(0);">
+                                        <div class="member-view-box">
+                                            <div class="member-image">
+                                                <!-- <img src="https://image.flaticon.com/icons/svg/145/145867.svg"
+                                                    alt="Member"> -->
+                                                <div class="member-details">
+                                                   
+                                                    <h3>Music</h3>
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <ul>
+                                        <li>
+                                            <a href="javascript:void(0);">
+                                                <div class="member-view-box">
+                                                    <div class="member-image">
+                                                        <!-- <img src="https://image.flaticon.com/icons/svg/145/145867.svg"
+                                                            alt="Member"> -->
+                                                        <div class="member-details">
+                                                            <a href="contant/music.html"  target="_blank"> <h3>Singer</h3></a>
+                                                            
+                                                            
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);">
+                                                <div class="member-view-box">
+                                                    <div class="member-image">
+                                                        <!-- <img src="https://image.flaticon.com/icons/svg/145/145867.svg"
+                                                            alt="Member"> -->
+                                                        <div class="member-details">
+                                                            <a href="contant/music1.html"  target="_blank"><h3>Music  <br>Composer</h3></a>
+                                                            
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);">
+                                                <div class="member-view-box">
+                                                    <div class="member-image">
+                                                        <!-- <img src="https://image.flaticon.com/icons/svg/145/145867.svg"
+                                                            alt="Member"> -->
+                                                        <div class="member-details">
+                                                            <a href="contant/music2.html"  target="_blank"><h3>Music  <br>Producer</h3></a>
+                                                            
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+
+                                        </li>
+                                        
+                                    </ul>
+                                </li>
+                             
+                               
+
+                                <li>
+                                    <a href="javascript:void(0);">
+                                        <div class="member-view-box">
+                                            <div class="member-image">
+                                                <!-- <img src="https://image.flaticon.com/icons/svg/145/145867.svg"
+                                                    alt="Member"> -->
+                                                <div class="member-details">
+                                                   
+                                                    <h3>Designing</h3>
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <ul>
+                                        <li>
+                                            <a href="javascript:void(0);">
+                                                <div class="member-view-box">
+                                                    <div class="member-image">
+                                                        <!-- <img src="https://image.flaticon.com/icons/svg/145/145867.svg"
+                                                            alt="Member"> -->
+                                                        <div class="member-details">
+                                                            <a href="contant/design.html"  target="_blank"> <h3>Cartoonist</h3></a>
+                                                            
+                                                            
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);">
+                                                <div class="member-view-box">
+                                                    <div class="member-image">
+                                                        <!-- <img src="https://image.flaticon.com/icons/svg/145/145867.svg"
+                                                            alt="Member"> -->
+                                                        <div class="member-details">
+                                                            <a href="contant/design1.html"  target="_blank"><h3>Graphics  <br> Disigning</h3></a>
+                                                            
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+
+                                        </li>
+                                        
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);">
+                                <div class="member-view-box">
+                                    <div class="member-image">
+                                        <!-- <img src="3" alt="Member"> -->
+                                        <div class="member-details">
+                                            <h3>Interests</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                            <ul>
+                                <li>
+                                    <a href="javascript:void(0);">
+                                        <div class="member-view-box">
+                                            <div class="member-image">
+                                                <!-- <img src="https://image.flaticon.com/icons/svg/145/145867.svg"
+                                                    alt="Member"> -->
+                                                <div class="member-details">
+                                                    <h3>History</h3>
+                                                   
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <ul>
+                                        <li>
+                                            <a href="javascript:void(0);">
+                                                <div class="member-view-box">
+                                                    <div class="member-image">
+                                                        <!-- <img src="https://image.flaticon.com/icons/svg/145/145867.svg"
+                                                            alt="Member"> -->
+                                                        <div class="member-details">
+                                                            <a class="ds" href="contant/History.html" target="_blank"><h3>Archaeologist</h3></a>
+                                                           
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);">
+                                                <div class="member-view-box">
+                                                    <div class="member-image">
+                                                        <!-- <img src="https://image.flaticon.com/icons/svg/145/145867.svg"
+                                                            alt="Member"> -->
+                                                        <div class="member-details">
+
+                                                           
+                                                            <a class="ds" href="contant/History1.html" target="_blank"> <h3>Civil <br>Services</h3></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+
+                                        </li>
+                                       
+                                    </ul>
+                                </li>
+
+
+                                <li>
+                                    <a href="javascript:void(0);">
+                                        <div class="member-view-box">
+                                            <div class="member-image">
+                                                <!-- <img src="https://image.flaticon.com/icons/svg/145/145867.svg"
+                                                    alt="Member"> -->
+                                                <div class="member-details">
+                                           
+                                                    <h3>Travelling</h3>
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <ul>
+                                        <li>
+                                            <a href="javascript:void(0);">
+                                                <div class="member-view-box">
+                                                    <div class="member-image">
+                                                        <!-- <img src="https://image.flaticon.com/icons/svg/145/145867.svg"
+                                                            alt="Member"> -->
+                                                        <div class="member-details">
+                                                            <a href="contant/Travelling.html" target="_blank"><h3>Photographer</h3></a>
+                                                            
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);">
+                                                <div class="member-view-box">
+                                                    <div class="member-image">
+                                                        <!-- <img src="https://image.flaticon.com/icons/svg/145/145867.svg"
+                                                            alt="Member"> -->
+                                                        <div class="member-details">
+                                                            <a href="contant/Travelling1.html" target="_blank"><h3>Travel <br> Blogger</h3></a>
+                                                            
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+
+                                        </li>
+                                        
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+
+    <div>
+
+    </div>
+</body>
+<script>
+    $(function () {
+        $('.genealogy-tree ul').hide();
+        $('.genealogy-tree>ul').show();
+        $('.genealogy-tree ul.active').show();
+        $('.genealogy-tree li').on('click', function (e) {
+            var children = $(this).find('> ul');
+            if (children.is(":visible")) children.hide('fast').removeClass('active');
+            else children.show('fast').addClass('active');
+            e.stopPropagation();
+        });
+    });
+
+</script>
+
+</html>
